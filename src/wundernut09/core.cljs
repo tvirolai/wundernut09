@@ -3,11 +3,8 @@
             [wundernut09.solve :as solve]
             [reagent.core :as r]))
 
-(def state
-  (let [{:keys [row grid pattern rowno]} (solve/solve (first data))]
-    (r/atom {:row row
-             :grid (take rowno grid)
-             :pattern pattern})))
+(def index
+  (r/atom 0))
 
 ;; ----
 ;; UI Components
@@ -21,27 +18,35 @@
 (defn row [datavec]
   [:div.row.horizontal-flex
     (for [i datavec]
-      ^{:key (str i "kee" (rand-int 100))}
-        (if (zero? i)
-          square
-          filled-square))])
+      (if (zero? i)
+        square
+        filled-square))])
 
+(defn button [value direction]
+  [:input {:type "button"
+           :value value
+           :on-click #(swap! index (if (= :inc direction)
+                                     inc
+                                     dec))}])
 
 ;; -------------------------
 ;; Views
 
 (defn home-page []
-  [:div [:h2 "Back to School, y'all"]
-   [:h3 (:rowno @state)]
-   [:h3 (:pattern @state)]
-   (map row (:grid @state))
-   #_(row (:row @state))])
+  (let [{:keys [r grid pattern rowno]} (solve/solve (nth data @index))]
+    [:div [:h2 "Back to School, y'all"]
+     [:h3 pattern]
+     (when-not (zero? @index)
+       (button "Edellinen rivi" :dec))
+     (when (<= @index (count data))
+       (button "Seuraava rivi" :inc))
+     (map row (take rowno grid))]))
 
-;; -------------------------
-;; Initialize app
+  ;; -------------------------
+  ;; Initialize app
 
-(defn mount-root []
-  (r/render [home-page] (.getElementById js/document "app")))
+  (defn mount-root []
+    (r/render [home-page] (.getElementById js/document "app")))
 
-(defn init! []
-  (mount-root))
+  (defn init! []
+    (mount-root))
