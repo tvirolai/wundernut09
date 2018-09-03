@@ -60,7 +60,10 @@
   ([row grid rowno]
    (let [res (get-pattern (take rowno grid))]
      (if (keyword? res)
-       res
+       {:row row
+        :grid grid
+        :pattern res
+        :rowno rowno}
        (recur row
               grid
               (inc rowno))))))
