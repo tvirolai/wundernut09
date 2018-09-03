@@ -22,12 +22,10 @@
         square
         filled-square))])
 
-(defn button [value direction]
+(defn button [value f]
   [:input {:type "button"
            :value value
-           :on-click #(swap! index (if (= :inc direction)
-                                     inc
-                                     dec))}])
+           :on-click #(swap! index f)}])
 
 ;; -------------------------
 ;; Views
@@ -37,9 +35,9 @@
     [:div [:h2 "Back to School, y'all"]
      [:h3 pattern]
      (when-not (zero? @index)
-       (button "Edellinen rivi" :dec))
-     (when (<= @index (count data))
-       (button "Seuraava rivi" :inc))
+       (button "Edellinen rivi" dec))
+     (when (< @index (dec (count data)))
+       (button "Seuraava rivi" inc))
      (map row (take rowno grid))]))
 
   ;; -------------------------
