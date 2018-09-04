@@ -1,5 +1,5 @@
 (ns wundernut09.core
-  (:require [wundernut09.data :refer [data]]
+  (:require [wundernut09.data :as d]
             [wundernut09.solve :as solve]
             [reagent.core :as r]))
 
@@ -28,6 +28,7 @@
                :else :normal)]
     [:div.row.horizontal-flex
      (for [i datavec]
+       ^{:key (str "key-" (gensym))}
        (if (zero? i)
          (square size false)
          (square size true)))]))
@@ -37,22 +38,31 @@
            :value value
            :on-click #(swap! index f)}])
 
+(defn link [title f]
+  [:p {:class "card-footer-item"
+       :on-click #(swap! index f)}
+   title])
+
 ;; -------------------------
 ;; Views
 
 (defn home-page []
-  (let [{:keys [r grid pattern rowno]} (solve/solve (nth data @index))]
-    [:div [:h2 "Back to School, y'all"]
-     [(case pattern
-        :blinking :h3.blinking
-        :vanishing :h3.hidden
-        :h3)
-      pattern]
-     (when-not (zero? @index)
-       (button "Edellinen rivi" dec))
-     (when (< @index (dec (count data)))
-       (button "Seuraava rivi" inc))
-     (map row (take rowno grid))]))
+  (let [input (nth d/data @index)
+        {:keys [r grid pattern rowno]} (solve/solve (d/parse-line input))]
+    [:div.card
+     [:header.card-header
+      [:p.card-header-title.is-size-1 "Back to School, y'all"]]
+     [:div.card-content
+      [:p (str "Input: " input)]
+      [:p (str "Pattern: " (name pattern))]
+      ; [:p.is-size-7.has-text-link (str "Input: " input)]
+      [:div.content
+       (map row (take rowno grid))]]
+      [:footer.card-footer
+       (link "Previous" dec)
+       (link "Next" inc)
+       #_(when
+         (< @index (dec (count d/data))))]]))
 
   ;; -------------------------
   ;; Initialize app

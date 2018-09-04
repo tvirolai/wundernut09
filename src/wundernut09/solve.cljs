@@ -14,7 +14,7 @@
            (contains? #{2 4} filled)) true
       :else false)))
 
-(defn next-row [prevrow]
+(defn- next-row [prevrow]
   (->> (add-padding prevrow)
        (partition 5 1)
        (map fill-square?)
@@ -25,11 +25,11 @@
             (->> r (drop-while zero?) reverse))]
     (->> row trim-zeros-and-rev trim-zeros-and-rev)))
 
-(defn row-contains-pattern? [row1 row2]
+(defn- row-contains-pattern? [row1 row2]
   (= (extract-pattern row1)
      (extract-pattern row2)))
 
-(defn gliding?
+(defn- gliding?
   ([grid] (gliding? (drop-last grid) (last grid)))
   ([grid row]
    (if (empty? grid)
@@ -47,12 +47,7 @@
     (= 100 (count grid)) :other
     :else nil))
 
-(def examples
-  {:blinking [0 1 0 1 1 0 0]
-   :gliding [0 1 0 1 1 1 0 0]
-   :vanishing [0 1 0 1 0]})
-
-(defn build-grid [row]
+(defn- build-grid [row]
   (iterate next-row row))
 
 (defn solve

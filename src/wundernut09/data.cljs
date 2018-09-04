@@ -24,7 +24,8 @@
   ######
   #...#...#...#...#...#...#...#...#...#...#....#######.##.##.#.#")
 
+(defn parse-line [line]
+  (mapv #(if (= \# %) 1 0) line))
+
 (def data
-  (let [lines (s/split input #"\n")]
-    (for [l lines]
-      (mapv #(if (= \# %) 1 0) l))))
+  (map s/trim (s/split input #"\n")))
