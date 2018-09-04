@@ -53,15 +53,16 @@
    :vanishing [0 1 0 1 0]})
 
 (defn build-grid [row]
-  (take 100 (iterate next-row row)))
+  (iterate next-row row))
 
 (defn solve
   ([row] (solve row (build-grid row) 1))
   ([row grid rowno]
-   (let [res (get-pattern (take rowno grid))]
+   (let [subgrid (take rowno grid)
+         res (get-pattern subgrid)]
      (if (keyword? res)
-       {:row row
-        :grid grid
+       {:r row
+        :grid subgrid
         :pattern res
         :rowno rowno}
        (recur row
