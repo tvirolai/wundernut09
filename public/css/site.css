@@ -1,9 +1,24 @@
 .square {
   width: 40px;
   height: 40px;
-  border: 1px solid;
   display: inline-block;
   box-sizing: border-box;
+  border: 1px solid;
+  border-left: none;
+  border-bottom: none;
+  min-width: 40px;
+}
+
+.square:first-child {
+  border-left: 1px solid;
+}
+
+.square:last-child {
+  border-right: 1px solid;
+}
+
+.horizontal-flex:last-child .square {
+  border-bottom: 1px solid;
 }
 
 .row {
@@ -12,11 +27,11 @@
 }
 
 .horizontal-flex {
-   display: flex;
-   flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 .vertical-flex {
-   display: flex;
-   flex-direction: column;
- }
+  display: flex;
+  flex-direction: column;
+}
