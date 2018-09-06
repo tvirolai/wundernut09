@@ -1,20 +1,11 @@
+# Wundernut no 9
 
-### Development mode
+My go for the [Wundernut number 9](https://github.com/wunderdogsw/wunderpahkina-vol9) challenge in ClojureScript.
 
-To start the Figwheel compiler, navigate to the project folder and run the following command in the terminal:
+### Dependencies
 
-```
-lein figwheel
-```
+You should have [Leiningen](https://leiningen.org/) and Java installed.
 
-Figwheel will automatically push cljs changes to the browser.
-Once Figwheel starts up, you should be able to open the `public/index.html` page in the browser.
+### Building & running
 
-
-### Building for production
-
-```
-lein clean
-lein package
-```
-# wundernut09
+Run `lein do clean, package`, then open `public/index.html` in your browser.
