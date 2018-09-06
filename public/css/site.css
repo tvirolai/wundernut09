@@ -62,8 +62,3 @@
     opacity: 0;
   }
 }
-
-.is-vertical-center {
-  display: flex;
-  align-items: center;
-}

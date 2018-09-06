@@ -18,17 +18,18 @@
                   ""
                   (str " square--" (name size)))
                 (when filled " has-background-grey-light"))]
-     [:div {:class c}])))
+     ^{:key (str "key-" (gensym))} [:div {:class c}])))
 
 (defn row [datavec]
-  (let [size (cond
-               (> (count datavec) 80) :tiny
-               (> (count datavec) 50) :small
-               (< (count datavec) 20) :big
+  (let [len (count datavec)
+        size (cond
+               (> len 80) :tiny
+               (> len 50) :small
+               (< len 20) :big
                :else :normal)]
+    ^{:key (str "row-" (gensym))}
     [:div.row.horizontal-flex
      (for [i datavec]
-       ^{:key (str "key-" (gensym))}
        (if (zero? i)
          (square size false)
          (square size true)))]))
@@ -38,10 +39,16 @@
            :value value
            :on-click #(swap! index f)}])
 
-(defn link [title f]
-  [:p {:class "card-footer-item"
-       :on-click #(swap! index f)}
-   title])
+(defn link [title f can-proceed]
+  (let [c (str "card-footer-item"
+               (if can-proceed
+                 " has-text-primary"
+                 " has-text-danger"))]
+    [:p {:class c
+         :on-click (if can-proceed
+                     #(swap! index f)
+                     #())}
+     title]))
 
 ;; -------------------------
 ;; Views
@@ -51,18 +58,16 @@
         {:keys [r grid pattern rowno]} (solve/solve (d/parse-line input))]
     [:div.card
      [:header.card-header
-      [:p.card-header-title.is-size-1 "Back to School, y'all"]]
-     [:div.card-content
+      [:p.card-header-title.is-size-1.is-centered "Back to School, y'all"]]
+     [:div.card-content.is-centered
       [:p (str "Input: " input)]
+      [:p (str "Lines rendered: " rowno)]
       [:p (str "Pattern: " (name pattern))]
-      ; [:p.is-size-7.has-text-link (str "Input: " input)]
       [:div.content
        (map row (take rowno grid))]]
       [:footer.card-footer
-       (link "Previous" dec)
-       (link "Next" inc)
-       #_(when
-         (< @index (dec (count d/data))))]]))
+       (link "Previous" dec (< 0 @index))
+       (link "Next" inc (< @index (dec (count d/data))))]]))
 
   ;; -------------------------
   ;; Initialize app
